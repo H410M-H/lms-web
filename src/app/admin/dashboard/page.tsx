@@ -1,5 +1,5 @@
+import AdminCard from "~/app/_components/shared/cards/AdminCard";
 import MainMenu from "~/app/_components/shared/mainmenu/mainmenu";
-import { AdminCards } from "~/app/_components/shared/cards/AdminCard";
 import { Separator } from "~/components/ui/separator";
 
 export default function AdminDashboard() {
@@ -16,7 +16,7 @@ export default function AdminDashboard() {
       </div>
       <Separator className="bg-green-900" />
       <MainMenu />
-      <AdminCards />
+      <AdminCard />
     </main>
 
   )
