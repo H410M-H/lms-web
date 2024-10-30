@@ -5,6 +5,18 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+    output: 'standalone',
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'asset.cloudinary.com',
+                port: '',  // Leave this empty unless you're using a specific port
+                pathname: '/**',  // Match all paths
+            },
+        ],
+    },
+};
 
 export default config;
