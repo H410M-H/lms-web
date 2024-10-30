@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import { useState, useRef, useEffect } from "react";
-import { Button } from "~/components/ui/button";
-import { ChevronDown, Search } from "lucide-react";
-import { Input } from "~/components/ui/input";
-import Link from "next/link";
+import { useState, useRef, useEffect } from "react"
+import { Button } from "~/components/ui/button"
+import { ChevronDown, Menu, X } from "lucide-react"
+import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
 
 const menuItems = [
   {
@@ -43,102 +43,189 @@ const menuItems = [
       { label: "Contact", href: "/about" },
     ],
   },
-];
+]
 
 export default function MainMenu() {
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const menuRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const menuRefs = useRef<Array<HTMLDivElement | null>>([])
 
   const handleMenuClick = (menuName: string) => {
-    setOpenDropdown((prev) => (prev === menuName ? null : menuName));
-  };
+    setOpenDropdown((prev) => (prev === menuName ? null : menuName))
+  }
 
   const handleOutsideClick = (e: MouseEvent) => {
     if (menuRefs.current.some((ref) => ref?.contains(e.target as Node))) {
-      return;
+      return
     }
-    setOpenDropdown(null);
-  };
+    setOpenDropdown(null)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent, menuName: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      handleMenuClick(menuName)
+    }
+  }
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("mousedown", handleOutsideClick)
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleOutsideClick)
+    }
+  }, [])
 
   return (
-    <nav className="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-300 via-yellow-200 to-green-800 shadow-md">
-      <div className="flex items-center space-x-4">
-        <Button
-          variant="ghost"
-          className="hover:bg-white/60 focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-all duration-300 ease-in-out"
-        >
-          <Link href="/admin/dashboard">Dashboard</Link>
-        </Button>
-
-        {menuItems.map((item, index) => (
-          <div
-            key={item.name}
-            className="relative"
-            ref={(el) => {
-              menuRefs.current[index] = el;
-            }}
-          >
+    <nav className="bg-gradient-to-r from-emerald-300 via-yellow-200 to-green-800 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
             <Button
               variant="ghost"
-              className="flex items-center hover:bg-green-400/60 focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-all duration-300 ease-in-out"
-              onMouseOver={() => handleMenuClick(item.name)}
-              aria-expanded={openDropdown === item.name}
-              aria-haspopup="menu"
-              aria-controls={`dropdown-${item.name}`}
+              className="hover:bg-white/60 focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-all duration-300 ease-in-out"
             >
-              {item.name}{" "}
-              <ChevronDown
-                className={`ml-1 h-4 w-4 transition-transform duration-300 ease-in-out ${
-                  openDropdown === item.name ? "rotate-180" : "rotate-0"
-                }`}
-              />
+              <Link href="/admin/dashboard">Dashboard</Link>
             </Button>
-
-            {openDropdown === item.name && (
-              <div
-                id={`dropdown-${item.name}`}
-                className="absolute z-50 left-0 mt-2 w-65 rounded-md shadow-lg bg-green-100 opacity-90 ring-1 ring-black ring-opacity-5 transition-all duration-300 ease-in-out transform"
-              >
-                <div
-                  className="py-1"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
-                >
-                  {item.options.map((option) => (
-                    <Link
-                      key={option.label}
-                      href={option.href}
-                      className="block px-4 py-2 text-base font-medium text-green-900 hover:bg-purple-100 focus:bg-purple-200 transition-all duration-300 ease-in-out"
-                      role="menuitem"
-                      onClick={() => setOpenDropdown(null)}
-                    >
-                      {option.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
-        ))}
-      </div>
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-4">
+              {menuItems.map((item, index) => (
+                <div
+                  key={item.name}
+                  className="relative"
+                  ref={(el) => {
+                    menuRefs.current[index] = el
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    className="flex items-center hover:bg-green-400/60 focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-all duration-300 ease-in-out"
+                    onMouseEnter={() => handleMenuClick(item.name)}
+                    onClick={() => handleMenuClick(item.name)}
+                    onKeyDown={(e) => handleKeyDown(e, item.name)}
+                    aria-expanded={openDropdown === item.name}
+                    aria-haspopup="menu"
+                    aria-controls={`dropdown-${item.name}`}
+                  >
+                    {item.name}{" "}
+                    <ChevronDown
+                      className={`ml-1 h-4 w-4 transition-transform duration-300 ease-in-out ${
+                        openDropdown === item.name ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </Button>
 
-      <div className="flex items-center space-x-4">
-        <div className="relative">
-          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white" />
-          <Input
-            className="pl-8 text-green-900 placeholder-gray-400 bg-white rounded-full shadow-md focus:ring-2 focus:ring-purple-300 focus:outline-none transition-all duration-300 ease-in-out"
-            placeholder="Search..."
-          />
+                  <AnimatePresence>
+                    {openDropdown === item.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        id={`dropdown-${item.name}`}
+                        className="absolute z-50 left-0 mt-2 w-65 rounded-md shadow-lg bg-green-100 opacity-90 ring-1 ring-black ring-opacity-5"
+                      >
+                        <div
+                          className="py-1"
+                          role="menu"
+                          aria-orientation="vertical"
+                          aria-labelledby="options-menu"
+                        >
+                          {item.options.map((option) => (
+                            <Link
+                              key={option.label}
+                              href={option.href}
+                              className="block px-4 py-2 text-base font-medium text-green-900 hover:bg-purple-100 focus:bg-purple-200 transition-all duration-300 ease-in-out"
+                              role="menuitem"
+                              onClick={() => setOpenDropdown(null)}
+                            >
+                              {option.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              className="inline-flex items-center justify-center p-2 rounded-md text-green-900 hover:text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-800 focus:ring-white"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+            >
+              <span className="sr-only">Open main menu</span>
+              {isMobileMenuOpen ? (
+                <X className="block h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Menu className="block h-6 w-6" aria-hidden="true" />
+              )}
+            </Button>
+          </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden"
+          >
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              {menuItems.map((item) => (
+                <div key={item.name} className="space-y-1">
+                  <Button
+                    variant="ghost"
+                    className="w-full text-left flex items-center justify-between hover:bg-green-400/60 focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-all duration-300 ease-in-out"
+                    onClick={() => handleMenuClick(item.name)}
+                    aria-expanded={openDropdown === item.name}
+                    aria-haspopup="menu"
+                    aria-controls={`mobile-dropdown-${item.name}`}
+                  >
+                    {item.name}
+                    <ChevronDown
+                      className={`ml-1 h-4 w-4 transition-transform duration-300 ease-in-out ${
+                        openDropdown === item.name ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </Button>
+                  <AnimatePresence>
+                    {openDropdown === item.name && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        id={`mobile-dropdown-${item.name}`}
+                        className="pl-4 space-y-1"
+                      >
+                        {item.options.map((option) => (
+                          <Link
+                            key={option.label}
+                            href={option.href}
+                            className="block px-3 py-2 rounded-md text-base font-medium text-green-900 hover:bg-purple-100 focus:bg-purple-200 transition-all duration-300 ease-in-out"
+                            onClick={() => {
+                              setOpenDropdown(null)
+                              setIsMobileMenuOpen(false)
+                            }}
+                          >
+                            {option.label}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
-  );
+  )
 }

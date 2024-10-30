@@ -27,7 +27,7 @@ export const AlumniCards = () => {
       title: "Salaries",
       description: "Streamline tuition and fee collection processes.",
       icon: <DollarSignIcon className="mb-4 h-12 w-12 text-green-500" />,
-      href: "",
+      href: "/revenue/salary",
     },
     {
       title: "Settings",

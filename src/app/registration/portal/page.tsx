@@ -1,5 +1,5 @@
 import { RegistrationCards } from "~/app/_components/shared/cards/RegistrationCard";
-import { LogoCloud } from "~/app/_components/shared/elements/LogoCloud";
+import LogoCloud from "~/app/_components/shared/elements/LogoCloud";
 import { Separator } from "~/components/ui/separator";
 
 

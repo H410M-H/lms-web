@@ -5,7 +5,7 @@ import { Separator } from "~/components/ui/separator";
 export default function Aumni() {
     return (
         <main className="min-h-screen sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3 bg-yellow-100/50">
-            <div className="container mx-auto p-4">
+            <div className="container mx-auto pt-20">
             <Separator className="bg-green-900"/>
             <div className="relative overflow-hidden">
               <h1 className="text-center text-5xl font-serif font-bold tracking-tight p-4">

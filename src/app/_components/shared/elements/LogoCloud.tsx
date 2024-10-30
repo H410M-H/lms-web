@@ -1,65 +1,56 @@
-"use client"
+'use client'
 
-import React, { useEffect } from 'react';
-import { motion, useAnimation } from 'framer-motion';
-import Image from 'next/image';
+import { useEffect, useMemo } from 'react'
+import { motion, useAnimation } from 'framer-motion'
+import { CldImage } from 'next-cloudinary'
 
 const logos = [
-  '/logo/off_logo.png', // Adjust this path if needed
-  '/logo/logo.png', // Adjust this path if needed
-  '/logo/off_logo.png', // Adjust this path if needed
-  '/logo/logo.png', // Adjust this path if needed
-  '/logo/off_logo.png', // Adjust this path if needed
-  '/logo/logo.png', // Adjust this path if needed
-  '/logo/off_logo.png', // Adjust this path if needed
-  '/logo/logo.png', // Adjust this path if needed
-  '/logo/off_logo.png', // Adjust this path if needed
-  '/logo/logo.png', // Adjust this path if needed
-  '/logo/off_logo.png', // Adjust this path if needed
-  '/logo/logo.png', // Adjust this path if needed
-  '/logo/off_logo.png', // Adjust this path if needed
-  '/logo/logo.png', // Adjust this path if needed
-];
+  'off_logo_ggu1ci.png',
+  'off_logo_green_g1q261',
+]
 
-export const LogoCloud = () => {
-  const controls = useAnimation();
+export default function LogoCloud() {
+  const controls = useAnimation()
+  const duplicatedLogos = useMemo(() => [...logos, ...logos, ...logos, ...logos, ...logos, ...logos, ...logos], [])
 
   useEffect(() => {
-    void controls.start({
-      x: [0, -1000], // Adjust this value based on the total width of your logos
-      transition: {
-        x: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 10,
-          ease: "linear",
+    const animateLogos = async () => {
+      await controls.start({
+        x: [0, '-100%'],
+        transition: {
+          x: {
+            repeat: Infinity,
+            repeatType: 'loop',
+            duration: 20,
+            ease: 'linear',
+          },
         },
-      },
-    });
-  }, [controls]);
+      })
+    }
+    void animateLogos()
+  }, [controls])
 
   return (
-      <div className="fixed">
-        <motion.div className="flex space-x-8" animate={controls}>
-          {/* Concatenating logos array for a seamless loop */}
-          {logos.concat(logos).map((logo, index) => (
-            <motion.div
-              key={index}
-              className="flex-shrink-0"
-              initial={{ opacity: 0, y: 0 }}
-              animate={{ opacity: 1, y: 30 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Image
-                src={logo}
-                alt={`Logo ${index * 5}`}
-                width={500} // Adjust based on your logo size
-                height={500} // Adjust based on your logo size
-                className="h-20 w-auto"
-              />
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-  );
-};
+    <div className="overflow-hidden w-full">
+      <motion.div className="flex space-x-8" animate={controls}>
+        {duplicatedLogos.map((logo, index) => (
+          <motion.div
+            key={index}
+            className="flex-shrink-0"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.05 }}
+          >
+            <CldImage
+              src={logo}
+              alt={`Logo ${index + 1}`}
+              width={80}
+              height={80}
+              className="h-20 w-auto"
+            />
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  )
+}
