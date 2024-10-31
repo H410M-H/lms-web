@@ -1,74 +1,160 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model classes {
+  classId      String         @id @default(uuid())
+  className    String         @default("none")
+  section      String         @default("ROSE")
+  category     ClassCategory  @default(Montessori)
+  fee          Float          @default(0)
+  StudentClass StudentClass[]
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
+  @@index([className])
 }
 
-// Necessary for Next auth
-model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? // @db.Text
-    access_token             String? // @db.Text
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? // @db.Text
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    refresh_token_expires_in Int?
-
-    @@unique([provider, providerAccountId])
+model students {
+  studentId           String         @id @default(uuid())
+  registrationNumber  String         @unique
+  studentMobile       String         @default("none")
+  fatherMobile        String         @default("none")
+  admissionNumber     String         @unique
+  studentName         String         @default("none")
+  gender              Gender
+  dateOfBirth         String         @default("none")
+  fatherName          String         @default("none")
+  studentCNIC         String         @default("0000-0000000-0")
+  fatherCNIC          String         @default("0000-0000000-0")
+  fatherProfession    String         @default("none")
+  bloodGroup          String?        @default("none")
+  guardianName        String?        @default("none")
+  caste               String         @default("none")
+  currentAddress      String         @default("none")
+  permanentAddress    String         @default("none")
+  medicalProblem      String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  isAssign            Boolean        @default(false)
+  discount            Float          @default(0)
+  discountbypercent   Float          @default(0)
+  StudentClass        StudentClass[]
 }
 
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model employees {
+  employeeId        String   @id @default(uuid())
+  employeeName      String   @db.VarChar(100)
+  fatherName        String   @db.VarChar(100)
+  gender            Gender
+  dob               String   @default("none")
+  cnic              String   @db.Char(15)
+  maritalStatus     MaritalStatus
+  doj               String   @default("none")
+  designation       Designation
+  residentialAddress String
+  mobileNo          String   @db.VarChar(13)
+  additionalContact String?  @db.VarChar(13)
+  education         String   @db.VarChar(100)
+  salaryAssignments SalaryAssignment[]
+  salaryIncrements  SalaryIncrement[]
+
+  @@index([employeeName])
+  @@index([cnic])
 }
 
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+model SalaryAssignment {
+  id           String   @id @default(uuid())
+  employeeId   String
+  employee     employees @relation(fields: [employeeId], references: [employeeId])
+  baseSalary   Float
+  increment    Float
+  totalSalary  Float
+  assignedDate DateTime @default(now())
+  sessionId    String
+  session      sessions @relation(fields: [sessionId], references: [sessionId])
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+model SalaryIncrement {
+  id              String   @id @default(uuid())
+  employeeId      String
+  employee        employees @relation(fields: [employeeId], references: [employeeId])
+  incrementAmount Float
+  reason          String
+  effectiveDate   DateTime
+}
 
-    @@unique([identifier, token])
+model sessions {
+  sessionId         String             @id @default(uuid())
+  sessionName       String             @default("none")
+  sessionFrom       String             @default("none")
+  sessionTo         String             @default("none")
+  StudentClass      StudentClass[]
+  SalaryAssignments SalaryAssignment[]
+}
+
+model fees {
+  feeId      String   @id @default(uuid())
+  feeName    String
+  feeTuition Int
+  feePaper   Int
+  feeSport   Int
+  feeIdcard  Int
+  feeComm    Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model users {
+  userId   String @id @default(uuid())
+  email    String @unique
+  password String
+  role     Role
+
+  @@index([email])
+}
+
+model StudentClass {
+  scId      String   @id @default(uuid())
+  studentId String
+  classId   String
+  sessionId String
+  class     classes  @relation(fields: [classId], references: [classId])
+  session   sessions @relation(fields: [sessionId], references: [sessionId])
+  student   students @relation(fields: [studentId], references: [studentId])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  CUSTOM
+}
+enum Role {
+  ADMIN
+  TEACHER
+  CLERK
+}
+enum MaritalStatus {
+  Married
+  Unmarried
+  Widow
+  Divorced
+}
+enum Designation {
+  Principal
+  Admin
+  Head
+  Clerk
+  Teacher
+  Worker
+}
+enum ClassCategory {
+  Montessori
+  Primary
+  Middle
+  SSC_I
+  SSC_II
 }
