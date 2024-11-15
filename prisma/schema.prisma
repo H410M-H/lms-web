@@ -28,8 +28,8 @@ model students {
   gender              Gender
   dateOfBirth         String         @default("none")
   fatherName          String         @default("none")
-  studentCNIC         String         @default("0000-0000000-0")
-  fatherCNIC          String         @default("0000-0000000-0")
+  studentCNIC         String         @default("00000-0000000-0")
+  fatherCNIC          String         @default("00000-0000000-0")
   fatherProfession    String         @default("none")
   bloodGroup          String?        @default("none")
   guardianName        String?        @default("none")

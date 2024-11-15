@@ -15,7 +15,6 @@ import { Loader2, ChevronDown, ChevronUp } from "lucide-react"
 import { api } from "~/trpc/react"
 
 const studentSchema = z.object({
-  registrationNumber: z.string().min(1, "Registration Number is required"),
   studentMobile: z.string().min(10, "Invalid mobile number"),
   fatherMobile: z.string().min(10, "Invalid mobile number"),
   admissionNumber: z.string().min(1, "Admission Number is required"),
@@ -23,8 +22,8 @@ const studentSchema = z.object({
   gender: z.enum(['MALE', 'FEMALE', 'CUSTOM']),
   dateOfBirth: z.string().min(1, "Date of Birth is required"),
   fatherName: z.string().min(2, "Father's name must be at least 2 characters").max(100, "Father's name must not exceed 100 characters"),
-  studentCNIC: z.string().regex(/^\d{4}-\d{7}-\d$/, "Invalid CNIC format"),
-  fatherCNIC: z.string().regex(/^\d{4}-\d{7}-\d$/, "Invalid CNIC format"),
+  studentCNIC: z.string().regex(/^\d{5}-\d{7}-\d$/, "Invalid CNIC format"),
+  fatherCNIC: z.string().regex(/^\d{5}-\d{7}-\d$/, "Invalid CNIC format"),
   fatherProfession: z.string().min(1, "Father's profession is required"),
   bloodGroup: z.string().optional(),
   guardianName: z.string().optional(),
@@ -35,6 +34,7 @@ const studentSchema = z.object({
   medicalProblem: z.string().optional(),
   discount: z.number().min(0).max(100),
   discountbypercent: z.number().min(0).max(100),
+  
 })
 
 type StudentSchema = z.infer<typeof studentSchema>
@@ -119,19 +119,6 @@ export default function StudentCreationDialog() {
                           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-secondary/10 rounded-b-lg"
                         >
                           {/* Academic fields */}
-                          <FormField
-                            control={form.control}
-                            name="registrationNumber"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Registration Number</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
                           <FormField
                             control={form.control}
                             name="admissionNumber"
