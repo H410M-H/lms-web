@@ -29,7 +29,7 @@ export default function Component() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${scrolled
           ? 'bg-transparent backdrop-blur-md h-14'
-          : 'bg-yellow-100/40 h-20'
+          : 'bg-green-100/40 h-20'
         }`}
     >
       <div className="container mx-auto px-4 h-full flex items-center justify-between">

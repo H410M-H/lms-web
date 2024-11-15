@@ -27,7 +27,7 @@ export default function Home() {
   const videos = [
     "https://res.cloudinary.com/dvvbxrs55/video/upload/f_auto,q_auto,w_auto/v1729269611/clip1_awtegx",
     "https://res.cloudinary.com/dvvbxrs55/video/upload/f_auto,q_auto,w_auto/v1729269805/clip4_stlpus",
-    "https://res.cloudinary.com/dvvbxrs55/video/upload/f_auto,q_auto,w_auto/v1729269773/clip3_cshxdl",
+    "https://res.cloudinary.com/dvvbxrs55/video/upload/f_auto,q_auto,w_auto/v1729269611/clip1_awtegx",
     "https://res.cloudinary.com/dvvbxrs55/video/upload/f_auto,q_auto,w_auto/v1729267740/clip5_szbx9z",
   ];
 
@@ -42,12 +42,12 @@ export default function Home() {
     <div className="min-h-screen bg-emerald-100 font-serif">
       {/* Hero Section */}
       <motion.section
-        className="relative h-[70vh] overflow-hidden"
+        className="relative h-[80vh] overflow-hidden"
         style={{ opacity: heroOpacity, scale: heroScale }}
       >
         <video
           key={currentVideoIndex}
-          className="absolute top-0 left-0 w-full h-full object-cover"
+          className="absolute top-20 left-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
@@ -100,7 +100,7 @@ export default function Home() {
       </motion.section>
 
       {/* Quick Links Section */}
-      <section className="py-16 px-4 md:px-8">
+      <section className="py-6 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             className="text-3xl font-bold mb-8 text-center"
